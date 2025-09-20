@@ -1,7 +1,6 @@
 {
   "name": "project-grader-backend",
   "version": "1.0.0",
-  "description": "Backend for Project Grading System (simple JSON DB)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
