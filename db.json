@@ -1,4 +1,13 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "admin-fixed-uuid",
+      "name": "Admin",
+      "email": "adminnsuk001@gmail.com",
+      "password": "admin001",
+      "role": "Admin",
+      "createdAt": "2025-09-20T00:00:00.000Z"
+    }
+  ],
   "submissions": []
 }
