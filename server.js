@@ -191,21 +191,14 @@ app.post("/api/submissions/:id/grade", async (req, res) => {
   res.json({ message: "Graded", submission: sub });
 });
 
-// -------------------- DELETE Student Submission --------------------
+// -------------------- DELETE Student Submission (No Email Needed) --------------------
 app.delete("/api/submissions/:id", async (req, res) => {
   const { id } = req.params;
-  const { student } = req.body || {}; // expecting student email
-
-  if (!student) return res.status(400).json({ error: "student email required" });
 
   const sub = await Submission.findOne({ id });
   if (!sub) return res.status(404).json({ error: "submission not found" });
 
-  if (sub.student !== student) {
-    return res.status(403).json({ error: "You can only delete your own submissions" });
-  }
-
-  // Delete uploaded file
+  // Delete uploaded file if it exists
   const filePath = path.join(__dirname, sub.filePath);
   if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
