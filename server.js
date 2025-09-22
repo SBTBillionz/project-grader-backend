@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
 
 const submissionSchema = new mongoose.Schema({
   id: String,
-  student: String,
+  student: String, // student email
   title: String,
   fileName: String,
   originalName: String,
@@ -189,6 +189,28 @@ app.post("/api/submissions/:id/grade", async (req, res) => {
   await sub.save();
 
   res.json({ message: "Graded", submission: sub });
+});
+
+// -------------------- DELETE Student Submission --------------------
+app.delete("/api/submissions/:id", async (req, res) => {
+  const { id } = req.params;
+  const { student } = req.body || {}; // expecting student email
+
+  if (!student) return res.status(400).json({ error: "student email required" });
+
+  const sub = await Submission.findOne({ id });
+  if (!sub) return res.status(404).json({ error: "submission not found" });
+
+  if (sub.student !== student) {
+    return res.status(403).json({ error: "You can only delete your own submissions" });
+  }
+
+  // Delete uploaded file
+  const filePath = path.join(__dirname, sub.filePath);
+  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+  await Submission.deleteOne({ id });
+  res.json({ message: "Submission deleted" });
 });
 
 // -------------------- Static Files --------------------
